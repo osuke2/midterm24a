@@ -82,12 +82,12 @@ title('Policy Function')
 %**                    Question C(Investment Model)
 %********************************************************************/
 
-% I set F(K)-Ψ(I,K)=(K^αI)^(1-s)/(1-s). 
+% I set F(K)-Ψ(I,K)=log(AK^(1+α)) - log(IK). 
 
 
 % Define parameters
-params.s = 0.5;        % Risk aversion
-params.a = 0.4;        % Capital share
+params.A = 3;          % Risk aversion
+params.a = 1.2;        % Capital share
 params.d = 0.05;       % Depreciation rate
 params.r = 0.04;       % Interest rate
 params.L = 1000;       % Grid size
@@ -419,7 +419,7 @@ function [v, I, K, dist] = Investment_FDM_fun(params)
     % Output: value function (v), investment (I), capital grid (K), convergence path (dist)
     
     % Extract parameters
-    s = params.s;
+    A = params.A;
     a = params.a;
     d = params.d;
     r = params.r;
@@ -442,7 +442,7 @@ function [v, I, K, dist] = Investment_FDM_fun(params)
     dist = zeros(maxit,1);
     
     % Initial guess for value function
-    tv = (K).^(1-s)/(1-s)/r;
+    tv = (log(A*K.^(a-1)) - log (d))/r;
     
     % Main iteration loop
     for n = 1:maxit
@@ -450,21 +450,21 @@ function [v, I, K, dist] = Investment_FDM_fun(params)
         
         % Forward difference
         dVf(1:L-1) = diff(v)/dK;
-        dVf(L) = Kmax^a*(d*Kmax)^(-s);
+        dVf(L) = (d*Kmax)^(-1);
         
         % Backward difference
         dVb(2:L) = diff(v)/dK;
-        dVb(1) = Kmin^a*(d*Kmin)^(-s);
+        dVb(1) = (d*Kmin)^(-1);
         
         % Consumption and savings
-        If = (dVf.*K.^(-a)).^(-1/s);
-        muf = If - d.*K;
-        Ib = (dVb.*K.^(-a)).^(-1/s);
-        mub = Ib - d.*K;
+        If = dVf.^(-1);
+        muf = If - d*K;
+        Ib = dVf.^(-1);
+        mub = Ib - d*K;
         
         % Steady state values
         I0 = d.*K;
-        dV0 = K.^a.*I0.^(-s);
+        dV0 = I0.^(-1);
         
         % Upwind scheme
         If2 = muf > 0;
@@ -473,8 +473,8 @@ function [v, I, K, dist] = Investment_FDM_fun(params)
         dV_Upwind =max(dVf.*If2 + dVb.*Ib2 + dV0.*I02, 1e-8);
         
         % Update consumption and utility
-        I = (dV_Upwind.*K.^(-a)).^(-1/s);
-        u = (K.^a.*I).^(1-s)/(1-s);
+        I = dV_Upwind.^(-1);
+        u = log(A*K.^a)-log(I);
         
         % Construct sparse transition matrix
         X = -min(mub,0)/dK;

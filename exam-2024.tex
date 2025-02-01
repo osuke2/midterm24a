@@ -1,0 +1,375 @@
+% !TEX encoding = UTF-8
+% !TEX program = pdflatex
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{CJKutf8}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{mathrsfs}
+\usepackage{hyperref}
+\allowdisplaybreaks
+
+\begin{document}
+\begin{CJK}{UTF8}{min}
+% ここに日本語の文章を入力
+\begin{flushright} % 右揃えにする
+ID:82402256　Name:Kei Hirano\\
+\end{flushright}
+\section*{Question1}
+(a)\quad
+Set V(k(0)) as
+\begin{align*}
+V(k(0))=\max_{\{c(t)\}} \, &\int_0^\infty e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&k(t)>0,c(t)\geq0\\
+&k(0):given
+\end{align*}
+Consider an small interval of time $\Delta t$ and we can rewrite V(k(0)) as follows, 
+\begin{align*}
+V(k(0))=\max_{\{c(t)\}} \, &\left\{\int_0^{\Delta t}e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt+\int_{\Delta t} ^\infty e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&k(t)>0,c(t)\geq0\\
+&k(0):given
+\end{align*}
+Here, from Taylor series around t=0,
+\begin{align*}
+\int_0^{\Delta t}e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt=&\int_0^{\Delta t}(1-rt+o(t))\left(\frac{c(0)^{1-s}-1}{1-s}+c(0)^{-s}\dot c(0)t
++o(t)\right)dt\\=&\frac{c(0)^{1-s}-1}{1-s}\Delta t+c(0)^{-s}\dot c(0)(\Delta t)^2-\frac 12\frac{c(0)^{1-s}-1}{1-s}r(\Delta t)^2\\-&\frac13 rc(0)^{-s}\dot c(0)(\Delta t)^3+\int_0^{\Delta t}\left(1-rt+\frac{c(0)^{1-s}-1}{1-s}+c(0)^{-s}\dot c(0)t
++o(t)\right)o(t)\,dt \\=&\frac{c(0)^{1-s}-1}{1-s}\Delta t+o(\Delta t)\quad\left(\because \forall a\in \mathbb{R},\left|\int_0^{\Delta t}ao(t)dt\right|\leq\int_0^{\Delta t}2tdt=(\Delta t)^2=o(\Delta t)\right)
+\end{align*}
+And also, 
+\begin{align*}
+\int_{\Delta t} ^\infty e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt=e^{-r\Delta t}\int_{\Delta t} ^\infty e^{-r(t-\Delta t)}\frac{c(t)^{1-s}-1}{1-s}\,dt
+\end{align*}
+Thus we have
+\begin{align*}
+V(k(0))=\max_{\{c(t)\}} \, &\left\{\frac{c(0)^{1-s}-1}{1-s}\Delta t+o(\Delta t)+e^{-r\Delta t}\int_{\Delta t} ^\infty e^{-r(t-\Delta t)}\frac{c(t)^{1-s}-1}{1-s}\,dt\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&k(t)>0,c(t)\geq0\\
+&k(0):given\\
+=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}\Delta t+o(\Delta t)+e^{-r\Delta t}V(k(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&c(0)\geq0\\
+&k(0):given\\
+\Leftrightarrow e^{r\Delta t}V(k(0))=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}e^{r\Delta t}\Delta t+o(\Delta t)+V(k(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&c(0)\geq0\\
+&k(0):given\\
+\Leftrightarrow(1+r\Delta t+o(\Delta t))V(k(0))=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}(1+r\Delta t+o(\Delta t))\Delta t+o(\Delta t)+V(k(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&c(0)\geq0\\
+&k(0):given\\
+\Leftrightarrow r\Delta tV(k(0))=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}\Delta t+o(\Delta t)+V(k(\Delta t))-V(k(0))\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&c(0)\geq0\\
+&k(0):given
+\end{align*}
+Dividing both sides by $\Delta t$,
+\begin{align*}
+rV(k(0))=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}+\frac{o(\Delta t)}{\Delta t}+\frac{V(k(\Delta t))-V(k(0))}{\Delta t}\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&c(0)\geq0\\
+&k(0):given
+\end{align*}
+Taking the limit $\Delta t $ to zero,
+\begin{align*}
+rV(k(0))=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}+V'(k(0))\dot k(0)\right\}\\
+\mathrm{s.t.} \,\,&\dot k(t)=Ak(t)^\alpha -\delta k(t)-c(t)\\
+&c(0)\geq0\\
+&k(0):given\\
+\Leftrightarrow rV(k(0))=\max_{c(0)}&\left\{\frac{c(0)^{1-s}-1}{1-s}+V'(k(0))(Ak(0)^\alpha-\delta k(0)-c(0))\right\}\\
+\mathrm{s.t.} \,\,&c(0)\geq0\\
+&k(0):given
+\end{align*}
+Therefore,
+\begin{align*}
+rV(k)=\max_c\left\{\frac{c^{1-s}-1}{1-s}+V'(k)(Ak^\alpha-\delta k-c)\right\}\quad\Box
+\end{align*}\\
+(b)\quad From the first-order condition,
+\begin{align*}
+c^{-s}=V'(k)
+\end{align*}
+Thus, optimal consumption is 
+\begin{align*}
+c=V'(k)^{-\frac1s}\quad \Box
+\end{align*}
+\section*{Question2}
+(a)\quad We compute the \emph{forward difference} as
+\begin{align*}
+dV_{i,f}=\frac{V(k_{i+1})-V(k_i)}{k_{i+1}-k_i}
+\end{align*}
+and the \emph{backward difference} as
+\begin{align*}
+dV_{i,b}=\frac{V(k_{i})-V(k_{i-1})}{k_{i}-k_{i-1}}.
+\end{align*}
+Then we can calculate $c_{i,f}$ and $c_{i,b}$ from the first-order condition, $c=(V'(k))^{-\frac1s}$. And from $c_{i,f}$ and $c_{i,b}$, we can also calculate $\mu_{i,f}$ and $\mu_{i,b}$, from the constraint, as
+\begin{align*}
+\mu_{i,f}=Ak_i^\alpha-\delta k_i-c_{i,f},\quad
+\mu_{i,b}=Ak_i^\alpha-\delta k_i-c_{i,b}.
+\end{align*}
+Because $\dfrac{c(t)^{1-s}-1}{1-s}$ is increasing and concave, we have 
+\begin{align*}
+dV_{i,f}\leq dV_{i,b}\Leftrightarrow c_{i,b}\leq c_{i,f}\Leftrightarrow\mu_{i,f}\leq\mu_{i,b}.
+\end{align*}
+ Thus, if $\mu_{i,f}\leq\mu_{i,b}<0$, we set $V'(k_i)=dV_{i,b}$ because k will decrease. If $\mu_{i,f}\leq0\leq\mu_{i,b}$, we set
+ $V'(k_i)=(Ak_i^\alpha-\delta k_i)^{-s}$ because in this case, we can think $k_i$ is almost at the steady state, or $\dot k_i=0$. If $0<\mu_{i,f}\leq\mu_{i,b}$, we set $V'(k_i)=dV_{i,f}$ because k will increase. Thus, we can get V'(k) for all $k\in[k_{\min},k_{\max}]$ and this is so-called upwind scheme.\quad$\Box $
+\\(b)
+The implicit scheme starts with 
+\begin{align*}
+\frac{V^{n+1}(k_i)-V^n(k_i)}{\Delta }+rV^{n+1}(k_i)=\frac{(c_i^n)^{1-s}-1}{1-s}+(V^{n+1}(k_i))'(Ak_i^\alpha-\delta k_i-c_i^n)
+\end{align*}
+where n is the value after n iteration and $c_i^n=(V^n(k_i))'^{-\frac1s}$.\\
+From the upwind scheme, we can rewrite this equation as
+\begin{align*}
+\frac{V^{n+1}(k_i)-V^n(k_i)}{\Delta }+rV^{n+1}(k_i)=&\frac{(c_i^n)^{1-s}-1}{1-s}+dV_{i,f}^{n+1}(Ak_i^\alpha-\delta k_i-c_{i,f}^n)^++dV_{i,b}^{n+1}(Ak_i^\alpha-\delta k_i-c_{i,b}^n)^-\\
+=&\frac{(c_i^n)^{1-s}-1}{1-s}+\frac{V^{n+1}(k_{i+1})-V^{n+1}(k_i)}{\Delta k}(\mu_{i,f}^n)^+\\+&\frac{V^{n+1}(k_{i})-V^{n+1}(k_{i-1})}{\Delta k}(\mu_{i,b}^n)^-\\
+=&\frac{(c_i^n)^{1-s}-1}{1-s}+x_i^nV^{n+1}(k_{i-1})+y_i^nV^{n+1}(k_i)+z_i^nV^{n+1}(k_{i+1})\qquad(1)
+\end{align*}
+where
+\begin{align*}
+x_i^n=-\frac{\min(\mu_{i,b}^n,0)}{\Delta k}\\
+y_i^n=-\frac{\max(\mu_{i,f}^n,0)}{\Delta k}+\frac{\min(\mu_b^n,0)}{\Delta k}\\
+z_i^n=\frac{\max(\mu_{i,f}^n,0)}{\Delta k}
+\end{align*}
+Since $V^{n+1}(k)$ is a I dimensional vector, we can rewrite equation (1) into a matrix form,
+\begin{align*}
+\left[\left(\frac{1}{\Delta } +r\right)I-P^n\right]V^{n+1}(k)=U^n+\frac{V^n(k)}{\Delta }
+\end{align*}
+where
+\begin{align*}
+P^n=\begin{pmatrix}y_1^n&z_1^n&0&\cdots&0\\x_2^n&y_2^n&z_2^n&\cdots&0\\\vdots&\ddots&\ddots&\ddots&\vdots\\0&\cdots&x^n_{I-1}&y^n_{I-1}&z^n_{I-1}\\0&\cdots&0&x^n_I&y^n_I
+\end{pmatrix},\quad
+U^n=\begin{pmatrix}
+\dfrac{(c_1^n)^{1-s}-1}{1-s}\\\vdots\\\dfrac{(c_I^n)^{1-s}-1}{1-s}
+\end{pmatrix}
+\end{align*}
+Then we can get 
+\begin{align*}
+V^{n+1}(k)=\left[\left(\frac{1}{\Delta } +r\right)I-P^n\right]^{-1}\left(U^n+\frac{V^n(k)}{\Delta }\right)
+\end{align*}
+\section*{QuestionB}
+(1)\quad
+Set V(a(0)) as
+\begin{align*}
+V(a(0))=\max_{\{c(t)\}} \, &\int_0^\infty e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given
+\end{align*}
+Consider an small interval of time $\Delta t$ and we can rewrite $V(a(0))$ as follows, 
+\begin{align*}
+V(a(0))=\max_{\{c(t)\}} \, &\left\{\int_0^{\Delta t} e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt+\int_{\Delta t}^\infty e^{-rt}\frac{c(t)^{1-s}-1}{1-s}\,dt\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given
+\end{align*}
+The following results can be obtained by doing the same thing as Question1-(a).
+\begin{align*}
+V(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}\Delta t+o(\Delta t)+e^{-r\Delta t}V(a(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given
+\end{align*}
+Multiplying both sides by $e^{r\Delta t}$,
+\begin{align*}
+e^{r\Delta t}V(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}\Delta te^{r\Delta t}+o(\Delta t)+V(a(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given\\
+\Leftrightarrow (1+r\Delta t+o(\Delta t))V(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}\Delta t(1+r\Delta t+o(\Delta t))+o(\Delta t)+V(a(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given\\
+\Leftrightarrow r\Delta t V(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}\Delta t+o(\Delta t)+V(a(\Delta t))-V(a(0))\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given\\
+\Leftrightarrow rV(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}+\frac{o(\Delta t)}{\Delta t}+\frac{V(a(\Delta t))-V(a(0))}{\Delta t}\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given
+\end{align*}
+Taking the limit $\Delta t$ to zero,
+\begin{align*}
+rV(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}+V'(a(0))\dot a(0)\right\}\\
+\mathrm{s.t.} \,\,&\dot a(t)=\omega+Ra(t)-c(t)\\
+&a(0):given\\
+\Leftrightarrow rV(a(0))=\max_{c(0)} \, &\left\{\frac{c(t)^{1-s}-1}{1-s}+V'(a(0))(\omega+Ra(0)-c(0))\right\}\\
+\mathrm{s.t.} \,\,&a(0):given
+\end{align*}
+Therefore,
+\begin{align*}
+rV(a)=\max_c \, &\left\{\frac{c^{1-s}-1}{1-s}+V'(a)(\omega+Ra-c)\right\}\quad\Box
+\end{align*}
+(2)\quad From the first-order condition
+\begin{align*}
+c^{-s}=V'(a)
+\end{align*}
+Thus, optimal consumption is
+\begin{align*}
+c=V'(a)^{-\frac1s}\quad \Box
+\end{align*}\\
+(3)\\
+We compute the \emph{forward difference} as
+\begin{align*}
+dV_{i,f}=\frac{V(a_{i+1})-V(a_i)}{a_{i+1}-a_i}
+\end{align*}
+and the \emph{backward difference} as
+\begin{align*}
+dV_{i,b}=\frac{V(a_{i})-V(a_{i-1})}{a_{i}-a_{i-1}}.
+\end{align*}
+Then we can calculate $c_{i,f}$ and $c_{i,b}$ from the first-order condition, $c=(V'(a))^{-\frac1s}$. And from $c_{i,f}$ and $c_{i,b}$, we can also calculate $\mu_f$ and $\mu_b$, from the constraint, as
+\begin{align*}
+\mu_{i,f}=\omega+Ra_i-c_{i,f},\quad
+\mu_{i,b}=\omega+Ra_i-c_{i,b}.
+\end{align*}
+Because $\dfrac{c(t)^{1-s}-1}{1-s}$ is increasing and concave, we have 
+\begin{align*}
+dV_{i,f}\leq dV_{i,b}\Leftrightarrow c_{i,b}\leq c_{i,f}\Leftrightarrow\mu_{i,f}\leq\mu_{i,b}.
+\end{align*}
+ Thus, if $\mu_{i,f}\leq\mu_{i,b}<0$, we set $V'(a_i)=dV_{i,b}$ because $a$ will decrease. If $\mu_{i,f}\leq0\leq\mu_{i,b}$, we set
+ $V'(a_i)=(\omega+Ra_i)^{-s}$ because in this case, we can think $a_i$ is almost at the steady state, or $\dot a_i=0$. If $0<\mu_{i,f}\leq\mu_{i,b}$, we set $V'(a_i)=dV_{i,f}$ because $a$ will increase. Thus, we can get $V'(a)$ for all $a\in[a_{\min},a_{\max}]$ and this is so-called upwind scheme.\quad$\Box $
+\\(4)\quad
+The implicit scheme starts with 
+\begin{align*}
+\frac{V^{n+1}(a_i)-V^n(a_i)}{\Delta }+rV^{n+1}(a_i)=\frac{(c_i^n)^{1-s}-1}{1-s}+(V^{n+1}(a_i))'(\omega+Ra_i-c^n_i)
+\end{align*}
+where n is the value after n iteration and $c_i^n=(V^n(a_i))'^{-\frac1s}$.\\
+From the upwind scheme, we can rewrite this equation as
+\begin{align*}
+\frac{V^{n+1}(a_i)-V^n(a_i)}{\Delta }+rV^{n+1}(a_i)=&\frac{(c_i^n)^{1-s}-1}{1-s}+dV_{i,f}^{n+1}(\omega+Ra_i-c_{i,f}^n)^++dV_{i,b}^{n+1}(\omega+Ra_i-c_{i,b}^n)^-\\
+=&\frac{(c_i^n)^{1-s}-1}{1-s}+\!\frac{V^{n+1}(a_{i+1})-V^{n+1}(a_i)}{\Delta a}(\mu_{i,f}^n)^+\\+&\!\frac{V^{n+1}(a_{i})-V^{n+1}(a_{i-1})}{\Delta a}(\mu_{i,b}^n)^-\\
+=&\frac{(c_i^n)^{1-s}-1}{1-s}+x_i^nV^{n+1}(a_{i-1})+y_i^nV^{n+1}(a_i)+z_i^nV^{n+1}(a_{i+1})\qquad(2)
+\end{align*}
+where
+\begin{align*}
+x_i^n=-\frac{\min(\mu_{i,b}^n,0)}{\Delta a}\\
+y_i^n=-\frac{\max(\mu_{i,f}^n,0)}{\Delta a}+\frac{\min(\mu_{i,b}^n,0)}{\Delta a}\\
+z_i^n=\frac{\max(\mu_{i,f}^n,0)}{\Delta a}
+\end{align*}
+Since $V^{n+1}(a)$ is a I dimensional vector, we can rewrite equation (2) into a matrix form,
+\begin{align*}
+\left[\left(\frac{1}{\Delta } +r\right)I-P^n\right]V^{n+1}(a)=U^n+\frac{V^n(a)}{\Delta }
+\end{align*}
+where
+\begin{align*}
+P^n=\begin{pmatrix}y_1^n&z_1^n&0&\cdots&0\\x_2^n&y_2^n&z_2^n&\cdots&0\\\vdots&\ddots&\ddots&\ddots&\vdots\\0&\cdots&x^n_{I-1}&y^n_{I-1}&z^n_{I-1}\\0&\cdots&0&x^n_I&y^n_I
+\end{pmatrix},\quad
+U^n=\begin{pmatrix}
+\dfrac{(c_1^n)^{1-s}-1}{1-s}\\\vdots\\\dfrac{(c_I^n)^{1-s}-1}{1-s}
+\end{pmatrix}
+\end{align*}
+Then we can get 
+\begin{align*}
+V^{n+1}(a)=\left[\left(\frac{1}{\Delta } +r\right)I-P^n\right]^{-1}\left(U^n+\frac{V^n(a)}{\Delta }\right)
+\end{align*}
+\section*{QuestionC}
+(1)\quad Set $V(K_0)$ as
+\begin{align*}
+V(K_0)=\max_{\{I(t)\}} \, &\int_0^\infty e^{-rt}[F(K(t))-\Psi(I(t),K(t))]\,dt\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0
+\end{align*}
+Consider an small interval of time $\Delta t$ and we can rewrite $V(K_0) $ as follows, \\
+\begin{align*}
+V(K_0)=\max_{\{I(t)\}} \, &\left\{\int_0^{\Delta t} e^{-rt}[F(K(t))-\Psi(I(t),K(t))]\,dt+\int_{\Delta t}^\infty e^{-rt}[F(K(t))-\Psi(I(t),K(t))]\,dt\right\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0
+\end{align*}
+Here, from Taylor series around t=0,
+\begin{align*}
+&\int_0^{\Delta t} e^{-rt}[F(K(t))-\Psi(I(t),K(t))]\,dt\\=&\int_0^{\Delta t}(1-rt+o(t))\left(F(K_0)+F'(K_0)t-\Psi(I(0),K_0)-\frac{\partial \Psi(I(0),K_0)}{\partial I}\dot I(0)t-\frac{\partial \Psi(I(0),K_0)}{\partial K}\dot K(0)t+o(t)\right)\,dt\\
+=&(F'(K_0)-\Psi(I(0),K_0))\Delta t+o(\Delta t)
+\end{align*}
+And also,
+\begin{align*}
+\int_{\Delta t}^\infty e^{-rt}[F(K(t))-\Psi(I(t),K(t))]\,dt=e^{-r\Delta t}\int_{\Delta t}^\infty e^{-r(t+\Delta t)}[F(K(t))-\Psi(I(t),K(t))]\,dt
+\end{align*}
+Thus we have 
+\begin{align*}
+V(K_0)=\max_{\{I(t)\}}  &\Bigg\{(F(K_0)-\Psi(I(0),K_0))\Delta t+o(\Delta t)\\+&e^{-r\Delta t}\!\!\int_{\Delta t}^\infty e^{-r(t+\Delta t)}[F(K(t))-\Psi(I(t),K(t))]\,dt\Bigg\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0\\
+=\max_{I(0)}  \, &\left\{(F(K_0)-\Psi(I(0),K_0))\Delta t+o(\Delta t)+e^{-r\Delta t}V(K(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0\\
+\Leftrightarrow e^{r\Delta t}V(K_0)=\max_{I(0)} \, &\left\{(F(K_0)-\Psi(I(0),K_0))e^{r\Delta t}\Delta t+o(\Delta t)+V(K(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0\\
+\Leftrightarrow (1+r\Delta t+o(\Delta t))V(K_0)=\max_{I(0)} \, &\left\{(F(K_0)-\Psi(I(0),K_0))\Delta t+o(\Delta t)+V(K(\Delta t))\right\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0\\
+\Leftrightarrow  rV(K_0)=\max_{I(0)}  \, &\left\{(F(K_0)-\Psi(I(0),K_0))+\frac{o(\Delta t)}{\Delta t}+\frac{V(K(\Delta t))-V(K_0)}{\Delta t}\right\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0
+\end{align*}
+Taking the limit $\Delta t$ to 0,
+\begin{align*}
+rV(K_0)=\max_{I(0)} \, &\left\{(F(K_0)-\Psi(I(0),K_0))+V'(K_0)\dot K(0)\right\}\\
+\mathrm{s.t.} \,\,&\dot K(t)=I(t)-\delta K(t)\\
+&K(0)=K_0\\
+=\max_{I(0)}  \, &\left\{F(K_0)-\Psi(I(0),K_0)+V'(K_0)(I(0)-\delta K_0)\right\}\\
+\mathrm{s.t.} \,\,&K(0)=K_0
+\end{align*}
+Therefore,
+\begin{align*}
+rV(K)=\max_{I}\{F(K)-\Psi(I,K)+V'(K)(I-\delta K)\}\quad \Box
+\end{align*}
+(2)\quad From the first-order condition
+\begin{align*}
+\frac{\partial \Psi(I,K)}{\partial I}=V'(K)\quad \Box
+\end{align*}
+\textbf{Economic interpletation: }This means the addition of initial capital K requires the addition of cost adjustment via investment I.\\
+\\(3)\quad
+We compute the \emph{forward difference} as
+\begin{align*}
+dV_{i,f}=\frac{V(K_{i+1})-V(K_i)}{K_{i+1}-K_i}
+\end{align*}
+and the \emph{backward difference} as
+\begin{align*}
+dV_{i,b}=\frac{V(K_{i})-V(K_{i-1})}{K_{i}-K_{i-1}}.
+\end{align*}
+Here, we assume that we can calculate $I_{i,f}$ and $I_{i,b}$ from the first-order condition, \\$\dfrac{\partial \Psi(I,K)}{\partial I}=V'(K)$. (I mean, if $\Psi(I,K)=I+K$, we cannot calculate $I_{i,f}$ and $I_{i,b}$ and solution doesn't exist.) And from $I_{i,f}$ and $I_{i,b}$, we can also calculate $\mu_f$ and $\mu_b$, from the constraint, as
+\begin{align*}
+\mu_{i,f}=I_{i,f}-\delta K_i,\quad
+\mu_{i,b}=I_{i,b}-\delta K_i.
+\end{align*}
+Here, we also assume that $\Psi(I,K)$ is increasing and concave function for I and K. Then we have 
+\begin{align*}
+dV_{i,f}\leq dV_{i,b}\Leftrightarrow I_{i,b}\leq I_{i,f}\Leftrightarrow\mu_{i,f}\leq\mu_{i,b}.
+\end{align*}
+ Thus, if $\mu_{i,f}\leq\mu_{i,b}<0$, we set $V'(K_i)=dV_{i,b}$ because K will decrease. If $\mu_{i,f}\leq0\leq\mu_{i,b}$, we set
+ $V'(K_i)=\dfrac{\partial \Psi(\delta K_i,K_i)}{\partial I}$ because in this case, we can think $K_i$ is almost at the steady state, or $\dot K_i=0$. If $0<\mu_{i,f}\leq\mu_{i,b}$, we set $V'(K_i)=dV_{i,f}$ because K will increase. Thus, we can get $V'(K)$ for all $a\in[a_{\min},a_{\max}]$ and this is so-called upwind scheme.\quad$\Box $\\
+\\(4)\quad
+The implicit scheme starts with 
+\begin{align*}
+\frac{V^{n+1}(K_i)-V^n(K_i)}{\Delta }+rV^{n+1}(K_i)=F(K_i)-\Psi(I_i^n,K_i)+(V^{n+1}(K_i))'(I^n_{i}-\delta K_i)
+\end{align*}
+where n is the value after n iteration and $I_i^n$ is the solution of\\$\dfrac{\partial \Psi(I^n_i,K_i)}{\partial I}=(V^n(K_i))'$.\\
+From the upwind scheme, we can rewrite this equation as
+\begin{align*}
+\frac{V^{n+1}(K_i)-V^n(K_i)}{\Delta }+rV^{n+1}(K_i)=&F(K_i)-\Psi(I_i^n,K_i)+dV_{i,f}^{n+1}(I^n_{i,f}-\delta K_i)^++dV_{i,b}^{n+1}(I^n_{b,f}-\delta K_i)^-\\
+=&F(K_i)-\Psi(I_i^n,K_i)+\frac{V^{n+1}(K_{i+1})-V^{n+1}(K_i)}{\Delta K}(\mu_{i,f}^n)^+\\+&\!\frac{V^{n+1}(K_{i})-V^{n+1}(K_{i-1})}{\Delta K}(\mu_{i,b}^n)^-\\
+=&F(K_i)-\Psi(I_i^n,K_i)+x_i^nV^{n+1}(K_{i-1})+y_i^nV^{n+1}(K_i)+z_i^nV^{n+1}(K_{i+1})\qquad(3)
+\end{align*}
+where
+\begin{align*}
+x_i^n=-\frac{\min(\mu_{i,b}^n,0)}{\Delta K}\\
+y_i^n=-\frac{\max(\mu_{i,f}^n,0)}{\Delta K}+\frac{\min(\mu_{i,b}^n,0)}{\Delta K}\\
+z_i^n=\frac{\max(\mu_{i,f}^n,0)}{\Delta K}
+\end{align*}
+Since $V^{n+1}(K)$ is a L dimensional vector, we can rewrite equation (3) into a matrix form,
+\begin{align*}
+\left[\left(\frac{1}{\Delta } +r\right)I-P^n\right]V^{n+1}(K)=U^n+\frac{V^n(K)}{\Delta }
+\end{align*}
+where
+\begin{align*}
+P^n=\begin{pmatrix}y_1^n&z_1^n&0&\cdots&0\\x_2^n&y_2^n&z_2^n&\cdots&0\\\vdots&\ddots&\ddots&\ddots&\vdots\\0&\cdots&x^n_{L-1}&y^n_{L-1}&z^n_{L-1}\\0&\cdots&0&x^n_L&y^n_L
+\end{pmatrix},\quad
+U^n=\begin{pmatrix}
+F(K_L)-\Psi(I_L^n,K_L)\\\vdots\\F(K_L)-\Psi(I_L^n,K_L)
+\end{pmatrix}
+\end{align*}
+Then we can get 
+\begin{align*}
+V^{n+1}(a)=\left[\left(\frac{1}{\Delta } +r\right)I-P^n\right]^{-1}\left(U^n+\frac{V^n(K)}{\Delta }\right)
+\end{align*}
+\end{CJK}
+\end{document}
