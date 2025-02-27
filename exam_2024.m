@@ -122,17 +122,27 @@ title('Policy Function')
 %********************************************************************/
 
 
-[v, t, s, ~] = BSPDE_FDM_fun();
+% Define parameters
+params.sigma = 0.4; % volatility
+params.r = 0.02;    % Interest rate
+params.d = 0;       % dividend
+params.K = 10;      % Strike price
+params.T = 1;       % End of the time
+params.M = 1000;   % Grid size for stock
+params.I = 100;     % Grid size for time    
+
+% Solve the model
+[v, t, ss] = BSPDE_FDM_fun(params);
 
 % ts plane
-[T, S] = meshgrid(t, s);
+[T, S] = meshgrid(t, ss);
 
 % 3D plot
 figure;
-surf(S, T, v, 'EdgeColor', 'none'); 
+surf(T, S, v, 'EdgeColor', 'none'); 
 colorbar;
-xlabel('Asset Price S');
-ylabel('Time to Maturity T');
+xlabel('Time to Maturity T');
+ylabel('Asset Price S');
 zlabel('Option Value V(S,t)');
 title('Black-Scholes PDE Solution for European Call Option');
 view(135, 30);
@@ -504,21 +514,25 @@ function [v, I, K, dist] = Investment_FDM_fun(params)
     end
 end
 
-function [v, t, s, dist] = BSPDE_FDM_fun()
+
+function [v, t, ss] = BSPDE_FDM_fun(params)
     % Extract parameters
-    sigma = 0.4;   
-    r = 0.02;      
-    d = 0.0;      
-    K = 10;       
-    T = 1;         
-    M = 1000;      
-    I = 100;       
+    sigma = params.sigma;   
+    r = params.r;      
+    d = params.d;      
+    K = params.K;       
+    T = params.T;         
+    M = params.M;      
+    I = params.I;       
 
     % Setup stock grid
-    smin = 0.4;
-    smax = 1000;
+    smin = log(0.4);
+    smax = log(1000);
+    amin = exp(smin);
+    amax = exp(smax);
     s = linspace(smin, smax, M)';
-    ds = (smax - smin) / (M - 1);
+    ss = linspace(amin, amax, M)';
+    ds = (smax - smin) / (M-1);
     
     % Set up time grid
     tmin = 0;
@@ -526,49 +540,35 @@ function [v, t, s, dist] = BSPDE_FDM_fun()
     t = linspace(tmin, tmax, I);
     dt = (tmax - tmin) / (I - 1);
 
-    % Initial condition
-    v = max(s - K, 0);
-
     % Initialize v as a matrix to store results for all time steps
-    v_all = zeros(M, I);
-    v_all(:, I) = v;  % Store initial condition at the last column (t = T)
+    v = zeros(M-1, I);
+    v(:, I) = max(exp(s(1:M-1)) -K, 0);  % Store initial condition at the last column (t = T)
+    
 
-    dist = zeros(I, 1);
+    
 
     % Tridiagonal matrix coefficients
-    j = (1:M-1)'; % j = 1, 2, ..., M-1
-    a = 0.5 * (r - d) * j * dt - 0.5 * sigma^2 * j.^2 * dt;
-    b = 1 + sigma^2 * j.^2 * dt + r * dt;
-    c = -0.5 * (r - d) * j * dt - 0.5 * sigma^2 * j.^2 * dt;
+    sig2 = sigma*sigma;
+    dss = ds*ds; 
 
-    A = diag(b) + diag(a(2:M-1), -1) + diag(c(1:M-2), 1);
+    a = 0.5*dt*((r-sig2)/ds-sig2/dss);
+    b = 1+dt*(r+sig2/dss);
+    c = -0.5*dt*((r-sig2)/ds+sig2/dss);
+
+    A = diag(b*ones(M-1,1)) + diag(a*ones(M-2,1), -1) + diag(c*ones(M-2,1), 1);
 
     % Implicit scheme
     for i = I-1:-1:1
         % RHS
-        rhs = v(2:M);
-        rhs(1) = rhs(1) - a(1) * v(1);
-        rhs(end) = rhs(end) - c(M-1) * v(M);
+        rhs = v(1:M-2,i+1);
+        rhs(1) = v(1,i+1);
+        rhs(M-1) = v(end,i+1) - c*(exp(smax) - K * exp(-r * (T - t(i))));
+
 
         % Solve the linear system
-        v(2:M) = A \ rhs;
-
-        % Store the result for the current time step
-        v_all(:, i) = v;
-
-        % Check convergence
-        if i < I-1
-            dist(i) = max(abs(v - v_old));
-            if dist(i) < 1e-6
-                fprintf('Value Function Converged, Iteration = %d\n', i);
-                break;
-            end
-        end
-        v_old = v;
+        v(1:M-1,i) = A \ rhs;
+        v(M, i) = exp(smax) - K * exp(-r * (T - t(i)));
     end
-
-    % Return the final v matrix
-    v = v_all;
 end
 
 
