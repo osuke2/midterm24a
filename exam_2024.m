@@ -147,6 +147,18 @@ zlabel('Option Value V(S,t)');
 title('Black-Scholes PDE Solution for European Call Option');
 view(135, 30);
 
+figure('Position', [100, 100, 600, 400])
+plot(S, v(:,1), 'LineWidth', 2)
+grid on
+set(gca, 'FontSize', 12)
+
+hold on
+
+y=max(S-params.K,0);
+plot(S,y);
+
+hold off
+
 %*******************************************************************
 %**                    Question E(Neural Networks)
 %********************************************************************/
