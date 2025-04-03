@@ -169,16 +169,16 @@ hold off
 
 
 %% Problem Definition
-% ODE: 0.04Ψ(x) = -Ψ'(x)^(1/2) + Ψ'(x)(x^0.3 - 0.05x - (Ψ'(x))^(-1/2))
+% ODE: 0.04Ψ(x) = -Ψ'(x)^(1/2) + 1 + Ψ'(x)(x^0.3 - 0.05x - (Ψ'(x))^(-1/2))
 % Initial condition: Ψ(0.1) = -1.07515
-% Domain: x ∈ [0, 2]
+% Domain: x ∈ [0.1, 10]
 
 %% Initial condition
-A = 0.1;
+A = -1.07515;
 
 %% Network Parameters
 N = 5;          % Number of hidden neurons
-learning_rate = 0.1;
+learning_rate = 0.005;
 max_its = 10000;
 tol = 1e-5;
 
@@ -190,8 +190,8 @@ theta = randn(N, 1) * sqrt(2/1);  % Hidden biases
 w = randn(N, 1) * sqrt(2/N);  % Output weights
 
 %% Generate Training Points
-nx = 50;
-xgrid = linspace(0, 2, nx)';
+nx = 1000;
+xgrid = linspace(0.1, 10, nx)';
 
 %% Training Loop
 tic;
@@ -201,11 +201,10 @@ for it = 1:max_its
     [Psi, dPsi] = forward_pass(xgrid, v, theta, w, A);
     
     % Compute Target (from RHS of ODE)
-    target = -sqrt(dPsi) + dPsi .* (xgrid.^0.3 - 0.05*xgrid - dPsi.^(-0.5));
-    target = 0.04 * Psi;
+    target = 25 * dPsi .* (xgrid .^0.03 - 0.05 * xgrid) - 50 * sqrt(dPsi) + 25;
     
     % Compute Error
-    error = mean((0.04*Psi - (-sqrt(dPsi) + dPsi .* (xgrid.^0.3 - 0.05*xgrid - dPsi.^(-0.5)))).^2);
+    error = mean((Psi - target).^2);
     
     if mod(it, 1000) == 0
         fprintf('it %d: Error = %.6f\n', it, error);
@@ -226,10 +225,10 @@ end
 toc;
 
 %% Evaluate and Plot Results
-nx_test = 50;
+nx_test = 1000;
 x_test = linspace(0.1, 10, nx_test)';
-[Psi_nn, ~] = forward_pass(x_test, v, theta, w, A);
-c_nn = Psi_nn.^(-2);
+[Psi_nn, dPsi_nn] = forward_pass(x_test, v, theta, w, A);
+c_nn = dPsi_nn.^(-0.5);
 
 % Plotting
 figure('Position', [100, 100, 900, 400]);
@@ -246,6 +245,8 @@ xlabel('k');
 ylabel('c(k)');
 title('Neural Network Solution');
 grid on;
+
+
 % ======================================
 % Functions
 % ======================================
@@ -613,9 +614,21 @@ function [Psi, dPsi] = forward_pass(x, v, theta, w, A)
     dNdx = dydx * w;  % [n_points × 1]
     
     % Trial solution and its derivative
-    Psi = A + x .* Nx;  % [n_points × 1]
-    dPsi = Nx + x .* dNdx;  % [n_points × 1]
+
+   % Raw derivative
+    g = Nx + x .* dNdx;
+
+    % Ensure non-negativity
+    dPsi = softplus(3*g)/3;
+
+    % Integrate numerically
+    Psi_no_const = cumsum(x, dPsi);
+
+    % Adjust to satisfy Psi(0.1) = A
+    [~, idx0] = min(abs(x - 0.1));
+    Psi = Psi_no_const - Psi_no_const(idx0) + A;
 end
+
 function [grad_v, grad_theta, grad_w] = compute_gradients(x, v, theta, w, target, A)
     % Compute gradients using numerical differentiation
     epsilon = 1e-6;
@@ -628,27 +641,27 @@ function [grad_v, grad_theta, grad_w] = compute_gradients(x, v, theta, w, target
     for i = 1:N
         v_plus = v; v_plus(i) = v_plus(i) + epsilon;
         v_minus = v; v_minus(i) = v_minus(i) - epsilon;
-        [~, dPsi_plus] = forward_pass(x, v_plus, theta, w, A);
-        [~, dPsi_minus] = forward_pass(x, v_minus, theta, w, A);
-        grad_v(i) = mean((dPsi_plus - target).^2 - (dPsi_minus - target).^2) / (2*epsilon);
+        [Psi_plus, ~] = forward_pass(x, v_plus, theta, w, A);
+        [Psi_minus, ~] = forward_pass(x, v_minus, theta, w, A);
+        grad_v(i) = mean((Psi_plus - target).^2 - (Psi_minus - target).^2) / (2*epsilon);
     end
     
     % Gradient for theta
     for i = 1:N
         theta_plus = theta; theta_plus(i) = theta_plus(i) + epsilon;
         theta_minus = theta; theta_minus(i) = theta_minus(i) - epsilon;
-        [~, dPsi_plus] = forward_pass(x, v, theta_plus, w, A);
-        [~, dPsi_minus] = forward_pass(x, v, theta_minus, w, A);
-        grad_theta(i) = mean((dPsi_plus - target).^2 - (dPsi_minus - target).^2) / (2*epsilon);
+        [Psi_plus, ~] = forward_pass(x, v, theta_plus, w, A);
+        [Psi_minus, ~] = forward_pass(x, v, theta_minus, w, A);
+        grad_theta(i) = mean((Psi_plus - target).^2 - (Psi_minus - target).^2) / (2*epsilon);
     end
     
     % Gradient for w
     for i = 1:N
         w_plus = w; w_plus(i) = w_plus(i) + epsilon;
         w_minus = w; w_minus(i) = w_minus(i) - epsilon;
-        [~, dPsi_plus] = forward_pass(x, v, theta, w_plus, A);
-        [~, dPsi_minus] = forward_pass(x, v, theta, w_minus, A);
-        grad_w(i) = mean((dPsi_plus - target).^2 - (dPsi_minus - target).^2) / (2*epsilon);
+        [Psi_plus, ~] = forward_pass(x, v, theta, w_plus, A);
+        [Psi_minus, ~] = forward_pass(x, v, theta, w_minus, A);
+        grad_w(i) = mean((Psi_plus - target).^2 - (Psi_minus - target).^2) / (2*epsilon);
     end
 end
 
@@ -659,4 +672,8 @@ end
 function dy = sigmoid_derivative(x)
     s = sigmoid(x);
     dy = s .* (1 - s);
+end
+
+function y = softplus(x)
+    y = log(1 + exp(x));
 end
