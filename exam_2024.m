@@ -622,7 +622,7 @@ function [Psi, dPsi] = forward_pass(x, v, theta, w, A)
     dPsi = softplus(3*g)/3;
 
     % Integrate numerically
-    Psi_no_const = cumsum(x, dPsi);
+    Psi_no_const = cumtrapz(x, dPsi);
 
     % Adjust to satisfy Psi(0.1) = A
     [~, idx0] = min(abs(x - 0.1));
