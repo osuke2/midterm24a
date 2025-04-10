@@ -554,8 +554,8 @@ function [v, t, ss] = BSPDE_FDM_fun(params)
     dt = (tmax - tmin) / (I - 1);
 
     % Initialize v as a matrix to store results for all time steps
-    v = zeros(M-1, I);
-    v(:, I) = max(exp(s(1:M-1)) -K, 0);  % Store initial condition at the last column (t = T)
+    v = zeros(M, I);
+    v(:, I) = max(exp(s) -K, 0);  % Store initial condition at the last column (t = T)
     
 
     
